@@ -50,11 +50,7 @@ fp32_to_bf16:
     li t1, 0x7fffffff
     li t2, 0x7f800000
     and t3, t0, t1
-    slt t4, t2, t3
-    beqz t4, notNaN
-    srli t1, t0, 16
-    ori t1, t1, 64
-    ret
+    blt t2, t3, NaN
 notNaN:
     srli t1, t0, 16
     andi t1, t1, 1
@@ -62,6 +58,10 @@ notNaN:
     add t1, t1, t2
     add t1, t0, t1
     srli t1, t1, 16
+    ret
+NaN:
+    srli t1, t0, 16
+    ori t1, t1, 64
     ret
 end:
     li a7, 10
